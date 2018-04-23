@@ -1,51 +1,6 @@
-# Provision VPC with cidr block of 10.0.0.0/16
-resource "aws_vpc" "myvpc" {
-  cidr_block       = "10.0.0.0/16"
 
-  tags {
-    Name = "myvpc"
-  }
-}
 
-# Provision public subnet
-resource "aws_subnet" "mysubnet" {
-  vpc_id     = "${aws_vpc.myvpc.id}"
-  cidr_block = "10.0.1.0/24"
-  map_public_ip_on_launch = true
 
-  tags {
-    Name = "mysubnet"
-  }
-}
-
-# Provision Internet Gateway
-resource "aws_internet_gateway" "myig" {
-  vpc_id = "${aws_vpc.myvpc.id}"
-
-  tags {
-    Name = "myig"
-  }
-}
-
-# Create route to the internet
-resource "aws_route_table" "myroute" {
-  vpc_id = "${aws_vpc.myvpc.id}"
-
-  route {
-    cidr_block = "0.0.0.0/0"
-    gateway_id = "${aws_internet_gateway.myig.id}"
-  }
-
-  tags {
-    Name = "myroute"
-  }
-}
-
-# Associate route table to internet with public subnet
-resource "aws_route_table_association" "sub_route_a" {
-  subnet_id      = "${aws_subnet.mysubnet.id}"
-  route_table_id = "${aws_route_table.myroute.id}"
-}
 
 
 # Create security group to allow SSH in and HTTP/S out
