@@ -19,8 +19,16 @@ resource "aws_security_group" "dev-sec-group-bastion-out" {
   vpc_id = "${aws_vpc.dev-vpc.id}"
 
     egress {
-    from_port = 22
-    to_port = 22
+    from_port = 22qqqqq
+
+
+
+
+:q
+
+
+
+to_port = 22
     protocol = "6"
     cidr_blocks = "${aws_subnet.dev-pub-subnet.cidr_block}"
   }
