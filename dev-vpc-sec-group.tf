@@ -15,7 +15,7 @@ resource "aws_security_group" "dev-sec-group-public-inb" {
     to_port = 22
     protocol = "6"
     cidr_blocks = [
-      "86.15.20.140/32"]
+      "********"]
   }
 }
 
