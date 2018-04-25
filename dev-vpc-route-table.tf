@@ -22,7 +22,7 @@ resource "aws_route_table" "dev-route-nat-gw" {
   }
 
   tags {
-    Name = "dev-route-igw"
+    Name = "dev-route-nat-gw"
   }
 }
 

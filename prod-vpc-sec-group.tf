@@ -15,12 +15,12 @@ resource "aws_security_group" "prod-sec-group-public-inb" {
     to_port = 22
     protocol = "6"
     cidr_blocks = [
-      "*********"]
+      "0.0.0.0/0"]
   }
 }
 
 resource "aws_security_group" "prod-sec-group-public-out" {
-  name = "Allow_ssh_to_priv"
+  name = "Allow_public _out"
   description = "Allow ssh inbound traffic"
   vpc_id = "${aws_vpc.prod-vpc.id}"
 
@@ -56,13 +56,13 @@ resource "aws_security_group" "prod-sec-group-private-inb" {
     from_port = 22
     to_port = 22
     protocol = "6"
-    cidr_blocks = ["${aws_instance.prod-bastion.private_ip}"]
+    cidr_blocks = ["${aws_instance.prod-bastion.private_ip}/32"]
   }
 }
 
 resource "aws_security_group" "prod-sec-group-private-out" {
-  name = "Allow_ssh_to_private"
-  description = "Allow ssh inbound traffic"
+  name = "Allow_private_to_internet"
+  description = "Allow http/s outbound traffic"
   vpc_id = "${aws_vpc.prod-vpc.id}"
 
   egress {

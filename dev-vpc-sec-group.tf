@@ -15,13 +15,13 @@ resource "aws_security_group" "dev-sec-group-public-inb" {
     to_port = 22
     protocol = "6"
     cidr_blocks = [
-      "********"]
+      "0.0.0.0/0"]
   }
 }
 
 resource "aws_security_group" "dev-sec-group-public-out" {
-  name = "Allow_ssh_to_priv"
-  description = "Allow ssh inbound traffic"
+  name = "Allow_public_out"
+  description = "Allow ssh and https/s outbound traffic"
   vpc_id = "${aws_vpc.dev-vpc.id}"
 
   egress {
@@ -56,7 +56,7 @@ resource "aws_security_group" "dev-sec-group-private-inb" {
     from_port = 22
     to_port = 22
     protocol = "6"
-    cidr_blocks = ["${aws_instance.dev-bastion.private_ip}"]
+    cidr_blocks = ["${aws_instance.dev-bastion.private_ip}/32"]
   }
 }
 
