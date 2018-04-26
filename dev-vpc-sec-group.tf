@@ -56,7 +56,7 @@ resource "aws_security_group" "dev-sec-group-private-inb" {
     from_port = 22
     to_port = 22
     protocol = "6"
-    cidr_blocks = ["${aws_instance.dev-bastion.private_ip}/32"]
+    cidr_blocks = ["${aws_subnet.dev-pub-subnet.cidr_block}"]
   }
 }
 
