@@ -6,8 +6,8 @@
 # Allow 80 and 443 out
 
 resource "aws_security_group" "prod-sec-group-public-inb" {
-  name = "Allow_ssh_to_bastion"
-  description = "Allow ssh inbound traffic"
+  name = "Allow_public_in"
+  description = "Allow public inbound traffic"
   vpc_id = "${aws_vpc.prod-vpc.id}"
 
   ingress {
@@ -20,8 +20,8 @@ resource "aws_security_group" "prod-sec-group-public-inb" {
 }
 
 resource "aws_security_group" "prod-sec-group-public-out" {
-  name = "Allow_public _out"
-  description = "Allow ssh inbound traffic"
+  name = "Allow_public_out"
+  description = "Allow public outbound traffic"
   vpc_id = "${aws_vpc.prod-vpc.id}"
 
   egress {
@@ -48,8 +48,8 @@ resource "aws_security_group" "prod-sec-group-public-out" {
 }
 
 resource "aws_security_group" "prod-sec-group-private-inb" {
-  name = "Allow_ssh_to_private"
-  description = "Allow ssh inbound traffic"
+  name = "Allow_private_in"
+  description = "Allow private inbound traffic"
   vpc_id = "${aws_vpc.prod-vpc.id}"
 
   ingress {
@@ -58,11 +58,18 @@ resource "aws_security_group" "prod-sec-group-private-inb" {
     protocol = "6"
     cidr_blocks = ["${aws_subnet.prod-pub-subnet.cidr_block}"]
   }
+
+  ingress {
+    from_port = 22
+    to_port = 22
+    protocol = "6"
+    cidr_blocks = ["${aws_subnet.dev-priv-subnet.cidr_block}"]
+  }
 }
 
 resource "aws_security_group" "prod-sec-group-private-out" {
-  name = "Allow_private_to_internet"
-  description = "Allow http/s outbound traffic"
+  name = "Allow_private_out"
+  description = "Allow private outbound traffic"
   vpc_id = "${aws_vpc.prod-vpc.id}"
 
   egress {
