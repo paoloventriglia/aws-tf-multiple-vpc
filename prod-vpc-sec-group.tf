@@ -1,6 +1,6 @@
 // Create security group to allow traffic inbound and outbound to/from public subnet
 resource "aws_security_group" "prod-sec-group-public-subnet" {
-  name = "prod-secgroup-public-subnet"
+  name = "prod-sec-group-public-subnet"
   description = "Allow inbound traffic to public subnet"
   vpc_id = "${aws_vpc.prod-vpc.id}"
 
@@ -39,7 +39,7 @@ resource "aws_security_group" "prod-sec-group-public-subnet" {
   }
 
   tags {
-    Name = "prod-secgroup-public-subnet"
+    Name = "prod-sec-group-public-subnet"
   }
 }
 

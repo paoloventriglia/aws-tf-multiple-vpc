@@ -4,7 +4,7 @@ resource "aws_instance" "dev-bastion" {
   instance_type = "t2.micro"
   key_name = "mykeypair"
   subnet_id = "${aws_subnet.dev-pub-subnet.id}"
-  vpc_security_group_ids = ["${aws_security_group.dev-sec-group-public-subnet}"]
+  vpc_security_group_ids = ["${aws_security_group.dev-sec-group-public-subnet.id}"]
 
   tags {
     Name = "dev-bastion"

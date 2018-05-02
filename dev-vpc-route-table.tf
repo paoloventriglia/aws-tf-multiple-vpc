@@ -35,10 +35,6 @@ resource "aws_route_table" "dev-priv-route" {
 resource "aws_route_table_association" "dev-sub-route-pub-ass" {
   subnet_id = "${aws_subnet.dev-pub-subnet.id}"
   route_table_id = "${aws_route_table.dev-pub-route.id}"
-
-  tags {
-    Name = "dev-sub-route-pub-ass"
-  }
 }
 
 # Associate Dev private subnet route with Dev private subnet
@@ -46,7 +42,4 @@ resource "aws_route_table_association" "dev-sub-route-priv-ass" {
   subnet_id      = "${aws_subnet.dev-priv-subnet.id}"
   route_table_id = "${aws_route_table.dev-priv-route.id}"
 
-  tags {
-    Name = "dev-sub-route-priv-ass"
-  }
 }
