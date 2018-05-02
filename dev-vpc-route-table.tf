@@ -1,5 +1,5 @@
-# Create Dev route public subnet to internet
-resource "aws_route_table" "dev-pub_route" {
+// Create route for Dev public subnet
+resource "aws_route_table" "dev-pub-route" {
   vpc_id = "${aws_vpc.dev-vpc.id}"
 
   route {
@@ -8,12 +8,12 @@ resource "aws_route_table" "dev-pub_route" {
   }
 
   tags {
-    Name = "dev-route-igw"
+    Name = "dev-pub-route"
   }
 }
 
-# Create Dev route private subnet to nat gw
-resource "aws_route_table" "dev-priv_route" {
+# Create route for Dev private subnet
+resource "aws_route_table" "dev-priv-route" {
   vpc_id = "${aws_vpc.dev-vpc.id}"
 
   route {
@@ -23,22 +23,30 @@ resource "aws_route_table" "dev-priv_route" {
 
   route {
     cidr_block = "${aws_vpc.prod-vpc.cidr_block}"
-    nat_gateway_id = "${aws_vpc_peering_connection.dev-prod-vpc-peering.id}"
+    nat_gateway_id = "${aws_vpc_peering_connection.vpc-peering-dev-prod.id}"
   }
 
   tags {
-    Name = "dev-route-nat-gw"
+    Name = "dev-priv-route"
   }
 }
 
-# Associate Dev route table public subnet   to internet with Dev public subnet
+# Associate Dev public subnet route with Dev public subnet
 resource "aws_route_table_association" "dev-sub-route-pub-ass" {
   subnet_id = "${aws_subnet.dev-pub-subnet.id}"
-  route_table_id = "${aws_route_table.dev-pub_route.id}"
+  route_table_id = "${aws_route_table.dev-pub-route.id}"
+
+  tags {
+    Name = "dev-sub-route-pub-ass"
+  }
 }
 
-# Associate Dev route table private subnet to nat gw with Dev private subnet
+# Associate Dev private subnet route with Dev private subnet
 resource "aws_route_table_association" "dev-sub-route-priv-ass" {
   subnet_id      = "${aws_subnet.dev-priv-subnet.id}"
-  route_table_id = "${aws_route_table.dev-priv_route.id}"
+  route_table_id = "${aws_route_table.dev-priv-route.id}"
+
+  tags {
+    Name = "dev-sub-route-priv-ass"
+  }
 }

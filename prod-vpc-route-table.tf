@@ -1,4 +1,4 @@
-# Create Prod route to the internet
+// Create route for prod public subnet
 resource "aws_route_table" "prod-pub-route" {
   vpc_id = "${aws_vpc.prod-vpc.id}"
 
@@ -8,11 +8,11 @@ resource "aws_route_table" "prod-pub-route" {
   }
 
   tags {
-    Name = "prod-route-igw"
+    Name = "prod-pub-route"
   }
 }
 
-# Create Prod route private subnet to nat gw
+// Create route for prod private subnet
 resource "aws_route_table" "prod-priv-route" {
   vpc_id = "${aws_vpc.prod-vpc.id}"
 
@@ -22,23 +22,31 @@ resource "aws_route_table" "prod-priv-route" {
   }
 
   route {
-    cidr_block = "${aws_vpc.dev-vpc.cidr_block}"
-    nat_gateway_id = "${aws_vpc_peering_connection.dev-prod-vpc-peering.id}"
+    cidr_block = "${aws_vpc.prod-vpc.cidr_block}"
+    nat_gateway_id = "${aws_vpc_peering_connection.vpc-peering-dev-prod.id}"
   }
 
   tags {
-    Name = "prod-route-nat-gw"
+    Name = "prod-priv-route"
   }
 }
 
-# Associate Prod route table to internet with Prod public subnet
-resource "aws_route_table_association" "prod-sub-route-ass" {
-  subnet_id      = "${aws_subnet.prod-pub-subnet.id}"
+// Associate prod public subnet route with prod public subnet
+resource "aws_route_table_association" "prod-sub-route-pub-ass" {
+  subnet_id = "${aws_subnet.prod-pub-subnet.id}"
   route_table_id = "${aws_route_table.prod-pub-route.id}"
+
+  tags {
+    Name = "prod-sub-route-pub-ass"
+  }
 }
 
-# Associate Prod route table private subnet to nat gw with Prod private subnet
+// Associate prod private subnet route with prod private subnet
 resource "aws_route_table_association" "prod-sub-route-priv-ass" {
   subnet_id      = "${aws_subnet.prod-priv-subnet.id}"
   route_table_id = "${aws_route_table.prod-priv-route.id}"
+
+  tags {
+    Name = "prod-sub-route-priv-ass"
+  }
 }

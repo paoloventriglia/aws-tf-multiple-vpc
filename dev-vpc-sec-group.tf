@@ -1,15 +1,10 @@
-# Create security groups
-# Internet to bastion on port 22
-# Bastion to priv subnet on port 22
-# Nat Gateway to internet
-# Private subnet to Nat gateway
-# Allow 80 and 443 out
-
-resource "aws_security_group" "dev-sec-group-public-inb" {
-  name = "Allow_public_in"
-  description = "Allow public inbound traffic"
+// Create security group to allow traffic inbound and outbound tp/from public subnet
+resource "aws_security_group" "dev-sec-group-public-subnet" {
+  name = "dev-secgroup-public-subnet"
+  description = "Allow inbound traffic to public subnet"
   vpc_id = "${aws_vpc.dev-vpc.id}"
 
+// Allow inbound ssh access from internet
   ingress {
     from_port = 22
     to_port = 22
@@ -17,13 +12,8 @@ resource "aws_security_group" "dev-sec-group-public-inb" {
     cidr_blocks = [
       "0.0.0.0/0"]
   }
-}
 
-resource "aws_security_group" "dev-sec-group-public-out" {
-  name = "Allow_public_out"
-  description = "Allow public outbound traffic"
-  vpc_id = "${aws_vpc.dev-vpc.id}"
-
+// Allow outbound ssh access to dev private subnet
   egress {
     from_port = 22
     to_port = 22
@@ -31,6 +21,8 @@ resource "aws_security_group" "dev-sec-group-public-out" {
     cidr_blocks = ["${aws_subnet.dev-priv-subnet.cidr_block}"]
   }
 
+
+// Allow outbound http access to internet
   egress {
     from_port = 80
     to_port = 80
@@ -38,6 +30,7 @@ resource "aws_security_group" "dev-sec-group-public-out" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
+// Allow outbound https access to internet
   egress {
     from_port = 443
     to_port = 443
@@ -45,26 +38,25 @@ resource "aws_security_group" "dev-sec-group-public-out" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
+  tags {
+    Name = "dev-secgroup-public-subnet"
+  }
 }
 
-resource "aws_security_group" "dev-sec-group-private-inb" {
-  name = "Allow_private_in"
+resource "aws_security_group" "dev-sec-group-private-subnet" {
+  name = "dev-sec-group-private-subnet"
   description = "Allow private inbound traffic"
   vpc_id = "${aws_vpc.dev-vpc.id}"
 
+//  Allow inbound ssh access from public subnet
   ingress {
     from_port = 22
     to_port = 22
     protocol = "6"
     cidr_blocks = ["${aws_subnet.dev-pub-subnet.cidr_block}"]
   }
-}
 
-resource "aws_security_group" "dev-sec-group-private-out" {
-  name = "Allow_private_out"
-  description = "Allow private outbound traffic"
-  vpc_id = "${aws_vpc.dev-vpc.id}"
-
+//  Allow outbound http access to internet
   egress {
     from_port = 80
     to_port = 80
@@ -72,6 +64,7 @@ resource "aws_security_group" "dev-sec-group-private-out" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
+//  Allow outbound https access to internet
   egress {
     from_port = 443
     to_port = 443
@@ -79,10 +72,15 @@ resource "aws_security_group" "dev-sec-group-private-out" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
-   egress {
+//  Allow outbound ssh access to prod priv subnet
+  egress {
     from_port = 22
     to_port = 22
     protocol = "6"
     cidr_blocks = ["${aws_subnet.prod-priv-subnet.cidr_block}"]
+  }
+
+  tags {
+    Name = "dev-sec-group-private-subnet"
   }
 }

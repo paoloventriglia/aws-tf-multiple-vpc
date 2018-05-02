@@ -1,4 +1,4 @@
-# Provision Dev public subnet
+// Provision Dev public subnet
 resource "aws_subnet" "dev-pub-subnet" {
   vpc_id     = "${aws_vpc.dev-vpc.id}"
   cidr_block = "10.100.2.0/26"
