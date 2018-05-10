@@ -19,6 +19,7 @@
 *.rar
 *.tar
 *.zip
+terraform-provider*
 
 # Logs and databases #
 ######################
@@ -41,3 +42,7 @@ Thumbs.db
 terraform.tfvars
 *.tfstate
 *.tfstate.backup
+
+# Folders #
+###########
+.terraform/*
