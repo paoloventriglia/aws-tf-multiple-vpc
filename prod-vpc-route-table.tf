@@ -22,7 +22,7 @@ resource "aws_route_table" "prod-priv-route" {
   }
 
   route {
-    cidr_block = "${aws_vpc.dev-vpc.cidr_block}"
+    cidr_block = "${aws_subnet.dev-priv-subnet.cidr_block}"
     nat_gateway_id = "${aws_vpc_peering_connection.vpc-peering-dev-prod.id}"
   }
 
